@@ -1,0 +1,74 @@
+
+
+<div class="gallery" data-masonry="true">
+    {% for illustration in include.collection %}
+    <div class="gallery-item">
+            {% if illustration.mytitle %}
+        <h4>{{ illustration.mytitle }}</h4>
+            {% endif %}
+        {% if illustration.image_path %}
+        <div class="gallery-item-image">
+        <img src="{{ illustration.image_path | relative_url }}" data-src="{{  illustration.image_path | relative_url }}"
+            alt="{{ illustration.title }}" loading="lazy">
+            </div>
+        {% endif %}
+
+     
+    </div>
+    <div class="modal">
+        <div class="hover-details">
+
+            {% if illustration.description %}
+            <div class="section-description">
+                {{ illustration.description | markdownify }}
+            </div>
+            {% endif %}
+            {% if illustration.categories %}
+            <span class="categories">
+                <div class="categories">
+                    {% for category in illustration.categories %}
+                    <span class="category-tag">{{ category }}</span>
+                    {% endfor %}
+                </div>
+            </span>
+            {% endif %}
+            {% if illustration.process %}
+            <h4>Process</h4>
+            <ol>
+                {% for step in illustration.process | split: '\n' %}
+                <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
+            {% endif %}
+            {% if illustration.medium or illustration.tools or illustration.dimensions or illustration.colors %}
+            <h4>Artwork Details</h4>
+            <ul>
+                {% if illustration.medium %}
+                <li><strong>Medium:</strong> {{ illustration.medium }}</li>
+                {% endif %}
+                {% if illustration.tools %}
+                <li><strong>Tools:</strong> {{ illustration.tools | join: ", " }}</li>
+                {% endif %}
+                {% if illustration.dimensions %}
+                <li><strong>Dimensions:</strong> {{ illustration.dimensions }}</li>
+                {% endif %}
+                {% if illustration.colors %}
+                <li><strong>Colors:</strong>
+                    <ul>
+                        {% for color in illustration.colors %}
+                        <li style="color: {{ color }};">{{ color }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <span class="close">&times;</span>
+        <div class="modal-content">
+            <img src="" alt="Modal Image">
+
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,86 @@
+---
+layout: default
+title: About
+seo:
+  description: Learn more about Aris Zhou, a professional illustrator and visual artist.
+  type: ProfilePage
+---
+
+<article class="about-page">
+
+    <section class="bio-section">
+        <div class="profile">
+            <img
+                src="{{ '/assets/images/profile.jpg' | relative_url }}"
+                alt="Aris Zhou"
+                class="profile-image"
+                >
+            
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/aris-zhou-128bb524a/" aria-label="LinkedIn Profile">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://www.instagram.com/kaseikiwi/" aria-label="Instagram Profile">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="bio-content">
+            <h3>Background</h3>
+            Aspiring illustrator seeking an internship to leverage my artistic skills in a creative studio setting. Committed to contributing innovative designs and absorbing professional insights to hone my illustration prowess and broaden my creative scope.
+        </div>
+    </section>
+
+    <section class="skills-section">
+        <h3>Skills & Expertise</h3>
+        <div class="skills-grid">
+            Software Proficiency: Adobe Creative Suite (Photoshop, Illustrator, InDesign), Procreate.
+Design & Illustration: Expertise in logo and branding, digital and print design, character and environmental art.
+Digital Content: Proficient in creating web graphics, banners, and social media content aligned with marketing strategies.
+Collaboration & Feedback: Effective at team collaboration and incorporating client feedback for design refinement.
+Print & Layout: Strong skills in brochure, poster, and flyer design.
+UI Design Basics: Familiarity with UI principles for creating user-friendly digital interfaces.
+Languages: Native English speaker, Understand and speak fluent Chinese
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <h3>Get in Touch</h3>
+        <form action="https://formspree.io/f/your-form-id"
+              method="POST"
+              class="contact-form"
+              data-netlify="true">
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text"
+                       id="name"
+                       name="name"
+                       required
+                       aria-required="true">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       required
+                       aria-required="true">
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message"
+                          name="message"
+                          required
+                          aria-required="true"
+                          rows="5"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </section>
+
+</article>

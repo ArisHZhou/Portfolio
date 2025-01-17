@@ -1,0 +1,67 @@
+name: Deploy Portfolio
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          bundle install
+          npm install
+
+      - name: Build JavaScript
+        run: npm run build
+
+      - name: Build Site
+        run: JEKYLL_ENV=production bundle exec jekyll build
+        env:
+          JEKYLL_PAT: ${{ secrets.JEKYLL_PAT }}
+
+      - name: Run Tests
+        run: |
+          bundle exec htmlproofer ./_site \
+            --disable-external \
+            --allow-hash-href \
+            --assume-extension \
+            --check-html
+
+      - name: Optimize Images
+        run: |
+          find ./_site/assets/images -type f \( -name "*.jpg" -o -name "*.png" \) -exec jpegoptim --strip-all --max=85 {} \;
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          cname: your-domain.com # Replace with your domain
+          enable_jekyll: false
+          
+      - name: Purge CDN Cache
+        if: github.ref == 'refs/heads/main'
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}'

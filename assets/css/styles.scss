@@ -1,0 +1,53 @@
+---
+---
+
+
+
+
+// Base
+@import "reset";
+@import "variables"; 
+@import "mixins";
+@import "typography";
+@import "navigation";
+@import "pages";
+// Animations
+//@import "animations";
+// Components
+//@import "components/gallery";
+//@import "components/modal";
+//@import "components/navigation";
+//@import "components/buttons";
+//
+//// Layout  
+//@import "layout/header";
+//@import "layout/footer";
+//@import "layout/grid";
+//
+//// Pages
+//@import "pages/artwork";
+//
+
+// Root Variables
+:root {
+//   @each $color-name, $shades in $colors {
+//     @each $shade-name, $value in $shades {
+//       --color-#{$color-name}-#{$shade-name}: #{$value};
+//     }
+//   }
+
+//   @each $space-name, $value in $spacing {
+//     --spacing-#{$space-name}: #{$value}; 
+//   }
+
+  @each $radius-name, $value in $border-radius {
+    --radius-#{$radius-name}: #{$value};
+  }
+}
+
+// Dark theme
+[data-theme="dark"] {
+  --color-background: #{map-get(map-get($colors, neutral), black)};
+  --color-text: #{map-get(map-get($colors, neutral), white)};
+  --color-border: #{map-get(map-get($colors, neutral), gray-700)};
+}

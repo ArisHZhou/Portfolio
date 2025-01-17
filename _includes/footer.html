@@ -1,0 +1,31 @@
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-primary">
+            <p class="copyright">&copy; {{ 'now' | date: "%Y" }} {{ site.author }}</p>
+            
+            {% if site.social %}
+            <div class="social-links">
+                {% if site.social.twitter %}
+                <a href="https://twitter.com/{{ site.social.twitter }}" 
+                   aria-label="Twitter Profile"
+                   rel="noopener noreferrer"
+                   target="_blank">Twitter</a>
+                {% endif %}
+                
+                {% if site.social.instagram %}
+                <a href="https://instagram.com/{{ site.social.instagram }}"
+                   aria-label="Instagram Profile"
+                   rel="noopener noreferrer"
+                   target="_blank">Instagram</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <nav class="footer-nav" aria-label="Footer Navigation">
+            {% for link in site.data.navigation %}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            {% endfor %}
+        </nav>
+    </div>
+</footer>

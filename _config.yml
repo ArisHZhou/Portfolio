@@ -1,0 +1,119 @@
+title: Aris Zhou Illustration Portfolio
+email: me@ariszhou.art
+description: >-
+  Aris Zhou's illustration portfolio showcasing artwork, including illustrations, 
+  graphic design, comics, visdev, and sketchbook pieces.
+baseurl: ""
+url: "https://ariszhou.github.io"
+github_username: ariszhou
+author: Aris Zhou
+
+twitter:
+  username: ariszhou
+  card: summary_large_image
+social:
+  name: Aris Zhou
+  links:
+    - https://twitter.com/ariszhou
+    - https://instagram.com/ariszhou
+    - https://behance.net/ariszhou
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - kramdown-parser-gfm
+sass:
+  style: expanded # or expanded if you want readable CSS
+  sass_dir: _sass
+# Collections  
+collections:
+  illustrations:
+    output: true
+    permalink: /illustrations/:path/
+    seo:
+      type: CreativeWork
+  graphic_design:
+    output: true
+    permalink: /graphic-design/:path/
+    seo:
+      type: CreativeWork
+  comics:
+    output: true
+    permalink: /comics/:path/
+    seo:
+      type: ComicStory
+  visdev:
+    output: true
+    permalink: /visdev/:path/
+    seo:
+      type: CreativeWork
+  sketchbook:
+    output: true
+    permalink: /sketchbook/:path/
+    seo:
+      type: Sketchbook 
+
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+  - scope:
+      path: ""
+      type: "illustrations"
+    values:
+      layout: "default"
+      schema_type: CreativeWork
+  - scope:
+      path: ""
+      type: "comics"
+    values:
+      layout: "default"
+      schema_type: ComicStory
+  - scope:
+      path: ""
+      type: "graphic_design"
+    values:
+      layout: "default"
+
+# Enhanced compression settings
+sass:
+  style: compressed
+  sourcemap: never
+
+# Improved image optimization
+picture:
+  source: "assets/images"
+  output: "assets/images/generated"
+  markup: "picture"
+  presets:
+    default:
+      ppi: [1, 2]
+      formats: [webp, original]
+      source_medium:
+        media: "(min-width: 40em)"
+        width: "600"
+      source_small:
+        media: "(min-width: 20em)"
+        width: "300"
+      source_default:
+        width: "300"
+
+# Enhanced exclude list
+exclude:
+  - src/
+  - node_modules/
+  - package.json
+  - package-lock.json
+  - rollup.config.js
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - .DS_Store
+  - .git/
+  - .github/
+  - .vscode/

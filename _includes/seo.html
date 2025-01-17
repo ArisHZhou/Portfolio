@@ -1,0 +1,16 @@
+{% if page.seo %}
+<meta name="description" content="{{ page.seo.description }}">
+<meta property="og:type" content="{{ page.seo.type | default: 'website' }}">
+<meta property="og:title" content="{{ page.title }} | {{ site.title }}">
+<meta property="og:description" content="{{ page.seo.description }}">
+<meta property="og:image" content="{{ page.seo.image | default: site.default_og_image | absolute_url }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@{{ site.twitter.username }}">
+{% endif %}
+
+{% if page.schema_markup %}
+<script type="application/ld+json">
+    {{ page.schema_markup | jsonify }}
+</script>
+{% endif %}

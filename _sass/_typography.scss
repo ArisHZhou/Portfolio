@@ -1,0 +1,57 @@
+@import "variables";
+
+html {
+  font-size: 62.5%;
+  @include breakpoint(lg) {
+    font-size: 70%;
+  }
+}
+
+body {
+  font-family: map-get($font-families, primary);
+  font-size: map-get($font-sizes, base);
+  line-height: 1.5;
+  color: map-get(map-get($colors, neutral), gray-900);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: map-get($font-families, secondary);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: map-get($spacing, base);
+}
+
+h1 {
+  @include font-size(3xl);
+  @include breakpoint(md) {
+    @include font-size(4xl);
+  }
+}
+
+h2 {
+  @include font-size(2xl);
+  @include breakpoint(md) {
+    @include font-size(3xl);
+  }
+}
+
+h3 {
+  @include font-size(xl);
+  @include breakpoint(md) {
+    @include font-size(2xl);
+  }
+}
+
+p {
+  margin-bottom: map-get($spacing, base);
+}
+
+a {
+  color: map-get(map-get($colors, primary), base);
+  text-decoration: none;
+  @include transition(color);
+
+  &:hover {
+    color: map-get(map-get($colors, primary), dark);
+  }
+}

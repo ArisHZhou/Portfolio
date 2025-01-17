@@ -1,0 +1,27 @@
+# Development-specific settings
+environment: development
+url: "http://localhost:4000"
+baseurl: ""
+
+# Enable more detailed logging
+verbose: true
+
+# Disable some production-only features
+compress_html:
+  enabled: false
+sass:
+  style: expanded # or expanded if you want readable CSS
+  sass_dir: _sass
+title: Aris Zhou Illustration Portfolio
+email: me@ariszhou.art
+# Add development-specific excludes
+exclude:
+  - node_modules
+  - scripts
+  - src
+  - package.json
+  - package-lock.json
+  - rollup.config.js
+  - README.md
+  - Gemfile
+  - Gemfile.lock

@@ -1,0 +1,85 @@
+// Colors
+$colors: (
+  primary: (
+    base: #5b8c5a,
+    light: #cfdc30,
+    dark: #0d1f22
+  ),
+  neutral: (
+    black: #000000,
+    white: #ffffff,
+    gray-100: #f7f7f7,
+    gray-200: #e6e6e6,
+    gray-300: #d5d5d5,
+    gray-400: #b3b3b3,
+    gray-500: #808080
+  )
+);
+
+// Typography
+$font-families: (
+  primary: ('Arial', sans-serif),
+  secondary: ('Georgia', serif),
+  mono: ('Courier New', monospace)
+);
+
+$font-sizes: (
+  xs: 1.2rem,
+  sm: 1.4rem,
+  base: 1.6rem,
+  lg: 1.8rem,
+  xl: 2.4rem,
+  2xl: 3.2rem,
+  3xl: 4.0rem
+);
+
+// Spacing
+$spacing: (
+  xs: 0.4rem,
+  sm: 0.8rem,
+  base: 1.6rem,
+  lg: 2.4rem,
+  xl: 3.2rem,
+  2xl: 4.8rem
+);
+
+// Breakpoints
+$breakpoints: (
+  xs: 375px,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  2xl: 1400px
+);
+
+// Z-index layers
+$z-layers: (
+  modal: 1000,
+  overlay: 900,
+  dropdown: 800,
+  header: 700,
+  footer: 600
+);
+
+// Border radius
+$border-radius: (
+  sm: 0.4rem,
+  base: 0.8rem,
+  lg: 1.6rem,
+  full: 9999px
+);
+
+// Transitions
+$transitions: (
+  fast: 0.15s ease-in-out,
+  base: 0.3s ease-in-out,
+  slow: 0.5s ease-in-out
+);
+
+// Shadows
+$shadows: (
+  sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+  base: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+);

@@ -1,0 +1,69 @@
+<header class="site-header">
+    <div class="header-wrapper">
+        <div class="logo-container">
+            <a href="{{ '/' | relative_url }}" class="logo-link" aria-label="Home">
+                <img 
+                    src="{{ '/assets/images/logos/logo.svg' | relative_url }}" 
+                    alt="{{ site.title }} Logo" 
+                    class="logo"
+                    width="50" 
+                    height="50"
+                    onerror="this.src='{{ '/assets/images/logo-fallback.png' | relative_url }}'"
+                >
+                <img 
+                    src="{{ '/assets/images/logos/textlogo.svg' | relative_url }}" 
+                    alt="{{ site.title }} Logo" 
+                    class="logo"
+                    width="100" 
+                    height="50"
+                    onerror="this.src='{{ '/assets/images/logo-fallback.png' | relative_url }}'"
+                >
+            </a>
+        </div>
+        <button 
+            class="menu-toggle" 
+            aria-label="Toggle navigation menu" 
+            aria-expanded="false"
+            aria-controls="primary-navigation"
+        >
+            <span class="hamburger"></span>
+        </button>
+
+        <nav id="primary-navigation" class="primary-nav">
+            <ul class="nav-links">
+                {% for link in site.data.navigation %}
+                <li class="nav-item">
+                    <a 
+                        href="{{ link.url }}" 
+                        class="nav-link {% if page.url == link.url %}active{% endif %}"
+                        {% if page.url == link.url %}aria-current="page"{% endif %}
+                    >
+                        {{ link.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        {% if site.email %}
+        <div class="contact-info">
+            <i class="fa-solid fa-envelope " style="color:white"></i>
+            <a 
+                href="mailto:{{ site.email }}" 
+                class="email-link"
+                aria-label="Send email to {{ site.email }}"
+            >
+                {{ site.email }}
+            </a>
+        </div>
+        {% endif %}
+    <div class="social-links top-right">
+        <a href="https://www.linkedin.com/in/aris-zhou-128bb524a/" aria-label="LinkedIn Profile">
+            <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="https://www.instagram.com/kaseikiwi/" aria-label="Instagram Profile">
+            <i class="fab fa-instagram"></i>
+        </a>
+    </div>
+    </div>
+</header>

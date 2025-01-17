@@ -1,0 +1,29 @@
+// Add timing variables
+$animation-speeds: (
+  fast: 0.2s,
+  medium: 0.3s,
+  slow: 0.5s
+);
+
+// Add easing variables
+$easings: (
+  default: cubic-bezier(0.4, 0, 0.2, 1),
+  in: cubic-bezier(0.4, 0, 1, 1),
+  out: cubic-bezier(0, 0, 0.2, 1)
+);
+
+// Improve modal animations
+.modal {
+  .modal-content {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: 
+      opacity map-get($animation-speeds, medium) map-get($easings, out),
+      transform map-get($animation-speeds, medium) map-get($easings, out);
+    
+    &.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}

@@ -1,0 +1,138 @@
+// Header, footer and Navigation
+@import "variables";
+
+  .site-header {
+    padding: map-get($spacing, base);
+    position: sticky;
+    text-align: center;
+    top: 0;
+    background-color: map-get($colors,primary, dark );
+    z-index: map-get($z-layers, header); 
+  }
+ // Site Footer 
+.site-footer {
+    background-color: map-get($colors,primary, dark );
+    color: map-get($colors,primary, light );
+    text-align: center;
+    padding: map-get($spacing, base); 
+    position: relative; 
+    z-index: map-get($z-layers, footer); 
+  } 
+ .email-link {
+    color:map-get($colors,primary, base );
+ } 
+  .logo-container {
+    margin-bottom: 2rem;
+  }
+  
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 2rem;
+  }
+  
+  .nav-item {
+    .nav-link {
+      color: map-get($colors,primary, base );
+      text-decoration: none;
+      
+      &:active {
+        font-weight: bold;
+        color:map-get($colors,primary, base );
+      text-decoration: underline;
+      text-decoration-color: map-get($colors,primary, light );
+      text-decoration-thickness: 0.2em;
+      text-underline-offset: 0.3em;
+      text-decoration-skip-ink: all;
+      }
+      
+      &:hover {
+        color: map-get($colors,primary, light );
+        font-weight: bold;
+        text-decoration: underline;
+        text-decoration-color: map-get($colors,primary, light );
+        text-decoration-thickness: 0.2em;
+        text-underline-offset: 0.3em;
+        text-decoration-skip-ink: all
+      }
+    }
+  }
+ 
+  
+  // Hide default menu toggle button on desktop
+  .menu-toggle {
+    display: none;
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .nav-links {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .menu-toggle {
+      display: block;
+    }
+  }
+
+  .logo-container {
+    text-align: center; /* Center the images horizontally */
+    font-size: 0; /* Remove extra space between images */
+  }
+  
+  .logo {
+    display: inline-block; 
+    /* Add margin if you want space between the images */
+    margin: 0 5px; 
+  }
+
+  .site-content,
+.footer-content {
+  max-width: map-get($breakpoints, lg);
+  margin: 0 auto;
+  padding: map-get($spacing, 2xl); 
+}
+
+// Footer Primary
+.footer-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+}
+
+// Copyright and Social Links
+.copyright {
+  margin-bottom: 0; // Remove any default margin
+}
+
+.social-links {
+  a {
+    display: inline-block;
+    margin-left: map-get($spacing, base);
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+// Footer Navigation
+.footer-nav {
+  text-align: center;
+
+  a {
+    display: inline-block;
+    margin: map-get($spacing, base);
+    color: map-get($colors, neutral, black-100);
+    text-decoration: none; 
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

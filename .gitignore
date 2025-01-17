@@ -1,0 +1,22 @@
+# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+assets/js/bundle.js
+assets/js/bundle.js.map
+
+# Development
+.env
+.env.local
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
