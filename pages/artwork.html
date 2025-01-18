@@ -1,0 +1,65 @@
+<article class="artwork-container">
+    <div class="artwork-image">
+        <img 
+            src="{{ page.thumbnail_path | default: page.image_path }}" 
+            data-full-img="{{ page.image_path }}"
+            alt="{{ page.title }}"
+            class="modal-trigger"
+            loading="lazy"
+            data-action="open-modal"
+        >
+    </div>
+    
+    <div class="artwork-details">
+        <h1 class="artwork-title">{{ page.title }}</h1>
+        
+        <div class="artwork-meta">
+            {% if page.date %}
+            <p class="date">
+                <time datetime="{{ page.date | date_to_xmlschema }}">
+                    {{ page.date | date: "%B %Y" }}
+                </time>
+            </p>
+            {% endif %}
+            
+            {% if page.medium %}
+            <p class="medium">{{ page.medium }}</p>
+            {% endif %}
+            
+            {% if page.tools %}
+            <div class="tools">
+                <h2>Tools Used:</h2>
+                <ul>
+                    {% for tool in page.tools %}
+                    <li>{{ tool }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if page.description %}
+        <div class="description">
+            {{ page.description | markdownify }}
+        </div>
+        {% endif %}
+        
+        {% if page.process %}
+        <div class="process">
+            <h2>Process</h2>
+            {{ page.process | markdownify }}
+        </div>
+        {% endif %}
+    </div>
+</article>
+
+<div class="modal" role="dialog" aria-label="Image Preview" aria-hidden="true">
+    <div class="modal-content">
+        <img src="" alt="" class="modal-image">
+        <button 
+            class="modal-close" 
+            aria-label="Close modal"
+            data-action="close-modal"
+        >&times;</button>
+    </div>
+</div>
