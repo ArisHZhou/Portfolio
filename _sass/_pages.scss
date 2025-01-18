@@ -5,7 +5,7 @@
 }
 // About Page
 .about-page {
-    max-width: map-get($breakpoints, lg); 
+    max-width: map-get($breakpoints,lg); 
     margin: 0 auto;
     padding: map-get($spacing, 2xl);
   }
@@ -56,14 +56,14 @@
       textarea {
         width: 100%;
         padding: map-get($spacing, base);
-        border: 1px solid map-get($colors, neutral, gray-300);
+        border: 1px solid map-get(map-get($colors, neutral), gray-300);
         box-shadow: map-get($shadows, sm); 
       }
     }
   
     .submit-btn {
-      background-color: map-get($colors, primary, base);
-      color: map-get($colors, neutral, white);
+      background-color: map-get(map-get($colors, primary), base);
+      color: map-get(map-get($colors, neutral), white);
       padding: map-get($spacing, base) map-get($spacing, lg);
       border: none;
       cursor: pointer;
@@ -73,7 +73,7 @@
       transition: background-color map-get($transitions, base);
   
       &:hover {
-        background-color: map-get($colors, primary, dark);
+        background-color: map-get(map-get($colors, primary), dark);
       }
     }
   }
@@ -103,18 +103,20 @@
   .gallery-item {
     aspect-ratio: 1;
     //border: 2px solid rgba(126, 190, 87, 0.3);
-    border: 2px solid map-get($colors,primay,base);
+    border: 2px solid map-get(map-get($colors,primary),base);
     border-radius: 8px;
     overflow: hidden;
-    padding: 10px;
+    //padding: 10px;
   }
  .gallery-item-image {
-  overflow:hidden;
+    width: 100%; 
+    height: 100%; 
  }
   
   .gallery-item img { /* Assuming your images are within each gallery-item */
-    max-width: 100%; 
-    max-height: 100%; 
+    width: 100%; 
+    height: 100%; 
+ object-fit: cover;
   }
 
   .hover-details {
