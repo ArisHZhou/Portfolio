@@ -1,12 +1,13 @@
 - title: Illustrations
   url: /
 - title: Graphic Design
-  url: /pages/graphic-design/
+  url: /pages/graphic-design.html
 - title: Comics
-  url: /pages/comics/
+  url: /pages/comics.html
 #- title: VisDev
-#  url: /pages/visdev/
+#  url: /pages/visdev.html
 - title: Sketchbook
-  url: /pages/sketchbook/
+  url: /pages/sketchbook.html
 - title: About Me
-  url: /pages/about/
+  url: /pages/about.html
+

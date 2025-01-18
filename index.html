@@ -10,4 +10,5 @@ seo:
   description: Browse through my illustration portfolio featuring both digital and traditional illustrations.
   type: CollectionPage
 ---
-{% include gallery-layout.html collection=site.illustrations %}
+{% assign posts = site.illustrations  | sort: 'order' %}
+{% include gallery-layout.html collection=posts %}
