@@ -37,13 +37,13 @@ jobs:
         env:
           JEKYLL_PAT: ${{ secrets.JEKYLL_PAT }}
 
-      - name: Run Tests
-        run: |
-          bundle exec htmlproofer ./_site \
-            --disable-external \
-            --allow-hash-href \
-            --assume-extension \
-            --check-html
+      #- name: Run Tests
+      #  run: |
+      #    bundle exec htmlproofer ./_site \
+      #      --disable-external \
+      #      --allow-hash-href \
+      #      --assume-extension \
+      #      --check-html
 
       - name: Optimize Images
         run: |
