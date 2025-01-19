@@ -11,7 +11,7 @@ body {
   font-family: map-get($font-families, primary);
   font-size: map-get($font-sizes, base);
   line-height: 1.5;
-  color: map-get(map-get($colors, neutral), gray-900);
+  color: map-get(map-get($colors, neutral), gray-500);
 }
 
 h1, h2, h3, h4, h5, h6 {
