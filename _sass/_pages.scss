@@ -99,6 +99,11 @@
     margin: 0 auto;
     overflow:scroll;
   }
+  @media (max-width: 768px) {
+	.gallery {
+	  grid-template-columns:  1fr; /* 2 equal-width columns */
+	}
+  }
   
   .gallery-item {
     aspect-ratio: 1;
