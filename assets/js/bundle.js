@@ -507,6 +507,10 @@
       this.imageOptimizer = new ImageOptimizer();
       this.gallery = document.querySelector('.gallery');
       this.uploadInput = document.querySelector('#gallery-upload');
+
+      this.hamburger = document.querySelector('.hamburger');
+   this.menu = document.querySelector('#primary-navigation'); // Use your menu's ID
+
     }
 
     init() {
@@ -515,6 +519,11 @@
       this.setupItemInteractions();
       this.setupImageUpload();
       this.setupLazyLoading();
+
+   this.hamburger.addEventListener('click', () => {
+    this.hamburger.classList.toggle('active');
+    this.menu.classList.toggle('active'); 
+  });
     }
 
 
