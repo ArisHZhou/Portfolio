@@ -6,5 +6,6 @@ seo:
   description: Browse through my comic artwork portfolio featuring both digital and traditional comic pieces.
   type: CollectionPage
 ---
+{% assign posts = site.comics  | sort: 'order' %}
+{% include gallery-layout.html collection=posts %}
 
-{% include gallery-layout.html collection=site.comics %}
