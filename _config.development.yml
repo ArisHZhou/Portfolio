@@ -13,7 +13,7 @@ sass:
   style: expanded # or expanded if you want readable CSS
   sass_dir: _sass
 title: Aris Zhou Illustration Portfolio
-email: me@ariszhou.art
+email: aris.c.zhou@gmail.com
 # Add development-specific excludes
 exclude:
   - node_modules

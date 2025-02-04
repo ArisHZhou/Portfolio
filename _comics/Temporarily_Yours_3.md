@@ -2,7 +2,7 @@
 image_path: /assets/images/comics/Temporarily_Yours_3.png
 medium: "Digital Illustration - Procreate"
 dimensions: "4000x3000px"
-order: 9
+order: 4
 featured: true
 description: |
   A vibrant digital landscape capturing the essence of a warm summer afternoon. 

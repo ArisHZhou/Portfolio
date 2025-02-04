@@ -80,7 +80,7 @@
     text-align: center; /* Center the images horizontally */
     font-size: 0; /* Remove extra space between images */
     display: inline-block;
-    background-color: map-get(map-get($colors,primary), light );
+    background-color: map-get(map-get($colors,primary), dark );
     border-radius: 8px;
   }
   

@@ -2,7 +2,7 @@
 image_path: /assets/images/comics/TV_Troubles_1.png
 medium: "Digital Illustration - Procreate"
 dimensions: "4000x3000px"
-order: 1
+order: 6000
 featured: true
 description: |
   A vibrant digital landscape capturing the essence of a warm summer afternoon. 
