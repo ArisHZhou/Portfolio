@@ -39,16 +39,19 @@
 <meta property="og:url" content="https://ariszhou.github.io/illustrations/Tiger_Kin/" />
 <meta property="og:site_name" content="Aris Zhou Illustration Portfolio" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-02-04T13:41:35+00:00" />
+<meta property="article:published_time" content="2025-03-09T00:40:39+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Tiger_kin" />
 <meta name="twitter:site" content="@ariszhou" />
 <meta name="twitter:creator" content="@Aris Zhou" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Aris Zhou"},"dateModified":"2025-02-04T13:41:35+00:00","datePublished":"2025-02-04T13:41:35+00:00","description":"[“something to talk about”]","headline":"Tiger_kin","mainEntityOfPage":{"@type":"WebPage","@id":"https://ariszhou.github.io/illustrations/Tiger_Kin/"},"url":"https://ariszhou.github.io/illustrations/Tiger_Kin/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Aris Zhou"},"dateModified":"2025-03-09T00:40:39+00:00","datePublished":"2025-03-09T00:40:39+00:00","description":"[“something to talk about”]","headline":"Tiger_kin","mainEntityOfPage":{"@type":"WebPage","@id":"https://ariszhou.github.io/illustrations/Tiger_Kin/"},"url":"https://ariszhou.github.io/illustrations/Tiger_Kin/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
+<script src="/assets/js/navigation.js"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
 
 <body>
     <header class="site-header">
@@ -61,7 +64,6 @@
                     class="logo"
                     width="100" 
                     height="100"
-                    onerror="this.src='/assets/images/logo-fallback.png'"
                 >
                 <img 
                     src="/assets/images/logos/textlogo-white.svg" 
@@ -69,95 +71,53 @@
                     class="logo"
                     width="200" 
                     height="100"
-                    onerror="this.src='/assets/images/logo-fallback.png'"
                 >
             </a>
         </div>
-        <button 
-            class="menu-toggle" 
-            aria-label="Toggle navigation menu" 
-            aria-expanded="false"
-            aria-controls="primary-navigation"
-        >
-            <span class="hamburger"></span>
+
+        <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
+            <span class="sr-only">Menu</span>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </button>
 
         <nav id="primary-navigation" class="primary-nav">
             <ul class="nav-links">
                 
                 <li class="nav-item">
-                    <a 
-                        href="/" 
-                        class="nav-link "
-                        
-                    >
-                        Illustrations
-                    </a>
+                    <a href="/" class="nav-link">Illustrations</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a 
-                        href="/pages/graphic-design.html" 
-                        class="nav-link "
-                        
-                    >
-                        Graphic Design
-                    </a>
+                    <a href="/pages/graphic-design.html" class="nav-link">Graphic Design</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a 
-                        href="/pages/comics.html" 
-                        class="nav-link "
-                        
-                    >
-                        Comics
-                    </a>
+                    <a href="/pages/comics.html" class="nav-link">Comics</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a 
-                        href="/pages/sketchbook.html" 
-                        class="nav-link "
-                        
-                    >
-                        Sketchbook
-                    </a>
+                    <a href="/pages/sketchbook.html" class="nav-link">Sketchbook</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a 
-                        href="/pages/about.html" 
-                        class="nav-link "
-                        
-                    >
-                        About Me
-                    </a>
+                    <a href="/pages/about.html" class="nav-link">About Me</a>
                 </li>
                 
             </ul>
         </nav>
 
-        
-        <div class="contact-info">
-            <i class="fa-solid fa-envelope " style="color:#CFDC30"></i>
-            <a 
-                href="mailto:me@ariszhou.art" 
-                class="email-link"
-                aria-label="Send email to me@ariszhou.art"
-            >
-                me@ariszhou.art
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/aris-zhou-128bb524a/" aria-label="LinkedIn Profile">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://www.instagram.com/kaseikiwi/" aria-label="Instagram Profile">
+                <i class="fab fa-instagram"></i>
             </a>
         </div>
-        
-    <div class="social-links top-right">
-        <a href="https://www.linkedin.com/in/aris-zhou-128bb524a/" aria-label="LinkedIn Profile">
-            <i class="fab fa-linkedin"></i>
-        </a>
-        <a href="https://www.instagram.com/kaseikiwi/" aria-label="Instagram Profile">
-            <i class="fab fa-instagram"></i>
-        </a>
-    </div>
     </div>
 </header>
 
@@ -167,18 +127,6 @@
     </main>
     <footer class="site-footer">
     <div class="footer-content">
-        <div class="footer-primary">
-            <p class="copyright">&copy; 2025 Aris Zhou</p>
-            
-            
-            <div class="social-links">
-                
-                
-                
-            </div>
-            
-        </div>
-        
         <nav class="footer-nav" aria-label="Footer Navigation">
             
             <a href="/">Illustrations</a>
@@ -192,6 +140,18 @@
             <a href="/pages/about.html">About Me</a>
             
         </nav>
+        <div class="footer-primary">
+            <p class="copyright">&copy; 2025 Aris Zhou</p>
+            
+            
+            <div class="social-links">
+                
+                
+                
+            </div>
+            
+        </div>
+        
     </div>
 </footer>
 
