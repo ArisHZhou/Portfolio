@@ -1,184 +1,264 @@
-@import "variables";
+@use 'sass:map';
+@use "variables" as *;
 
 .header-wrapper {
   position: relative; /* This allows positioning child elements within it */
 }
 // About Page
 .about-page {
-    max-width: map-get($breakpoints,lg); 
-    margin: 0 auto;
-    padding: map-get($spacing, 2xl);
-  }
-  
-  // Bio Section
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+// Bio section with image and text
+.bio-section {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.bio-section img {
+  height: 300px;
+  width: auto;
+  max-width: 100%; // Ensure image doesn't overflow on mobile
+}
+
+.bio-content {
+  flex: 1;
+}
+
+h3, .skills-heading {
+  color: #666;
+  font-size: 2.4rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+// Skills grid
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.skill-item p {
+  margin: 0;
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
   .bio-section {
-    display: flex;
-    align-items: flex-start; 
-    gap: map-get($spacing, lg);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
-  
+
   .bio-section img {
-    border-radius: map-get($border-radius, base);
-    max-width: 300px;  // Or adjust this value as needed
-    height: auto;      // Maintain aspect ratio 
-  
+    height: auto;
+    width: 250px; // Fixed width on mobile
   }
-  
-  // Skills Section
-  .skills-section h2 {
-    font-size: map-get($font-sizes, 2xl);
-    margin-bottom: map-get($spacing, base);
+
+  .bio-content {
+    width: 100%;
   }
-  
+
   .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: map-get($spacing, base);
+    grid-template-columns: 1fr; // Single column on mobile
   }
-  
-  .skills-grid ul {
-    list-style: none;
-    padding: 0;
+
+  .skill-item {
+    text-align: left; // Keep skills text left-aligned
   }
-  
-  // Contact Section
-  .contact-section {
-    margin-top: map-get($spacing, base);
-  
-    .form-group {
-      margin-bottom: map-get($spacing, xs);
-      label {
-        display: block;
-        margin-bottom: map-get($spacing, xs);
-      }
-  
-      input,
-      textarea {
-        width: 100%;
-        padding: map-get($spacing, base);
-        border: 1px solid map-get(map-get($colors, neutral), gray-300);
-        box-shadow: map-get($shadows, sm); 
-      }
+}
+
+// Even smaller screens
+@media (max-width: 480px) {
+  .about-page {
+    padding: 1rem;
+  }
+
+  .bio-section img {
+    width: 200px; // Slightly smaller on very small screens
+  }
+}
+
+// Skills Section
+.skills-section h2 {
+  font-size: map.get($font-sizes, 2xl);
+  margin-bottom: map.get($spacing, base);
+}
+
+.skills-grid ul {
+  list-style: none;
+  padding: 0;
+}
+
+// Contact Section
+.contact-section {
+  margin-top: map.get($spacing, base);
+
+  .form-group {
+    margin-bottom: map.get($spacing, xs);
+    label {
+      display: block;
+      margin-bottom: map.get($spacing, xs);
     }
-  
-    .submit-btn {
-      background-color: map-get(map-get($colors, primary), base);
-      color: map-get(map-get($colors, neutral), white);
-      padding: map-get($spacing, base) map-get($spacing, lg);
-      border: none;
-      cursor: pointer;
-      display: block;  // Make the button a block-level element
-      margin: 0 auto; // Center horizontally 
-      width: auto;     // Or set a specific width if needed
-      transition: background-color map-get($transitions, base);
-  
-      &:hover {
-        background-color: map-get(map-get($colors, primary), dark);
-      }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: map.get($spacing, base);
+      border: 1px solid map.get(map.get($colors, neutral), gray-300);
+      box-shadow: map.get($shadows, sm); 
     }
   }
 
-   
-  // Filter Buttons
-  .filter-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin: 2rem 0;
-  }
-  
-  // Gallery Layout
-  .gallery {
-    display: grid;
-    //grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
-    grid-template-rows: repeat(2, auto); /* 2 rows with automatic height */
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    overflow:scroll;
-  }
-  @media (max-width: 768px) {
-	.gallery {
-	  grid-template-columns:  1fr; /* 2 equal-width columns */
-	}
-  }
-  
-  .gallery-item {
-    aspect-ratio: 1;
-    //border: 2px solid rgba(126, 190, 87, 0.3);
-    border: 2px solid map-get(map-get($colors,primary),base);
-    border-radius: 8px;
-    overflow: hidden;
-    padding: 0px;
+  .submit-btn {
+    background-color: map.get(map.get($colors, primary), base);
+    color: map.get(map.get($colors, neutral), white);
+    padding: map.get($spacing, base) map.get($spacing, lg);
+    border: none;
+    cursor: pointer;
+    display: block;  // Make the button a block-level element
+    margin: 0 auto; // Center horizontally 
+    width: auto;     // Or set a specific width if needed
+    transition: background-color map.get($transitions, base);
 
+    &:hover {
+      background-color: map.get(map.get($colors, primary), dark);
+    }
   }
- .gallery-item-image {
-    width: 100%; 
-    height: 100%; 
- }
-  
-  .gallery-item img { /* Assuming your images are within each gallery-item */
-    width: 100%; 
-    height: 100%; 
- object-fit: cover;
-  }
+}
 
-  .hover-details {
-    display: none; /* Hide the details by default */
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
-    color: white;
-    padding: 20px;
-    margin-top: 10px; 
-    border-radius: 8px; /* Add rounded corners */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 60%;
-    max-height: 80%;
-    z-index: 9999;
-    pointer-events: none; 
-  }
+// Filter Buttons
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+// Gallery Layout
+.gallery {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gallery-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: 100%;
+  justify-content: flex-start;
+  max-width: 1100px;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
   
-  .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
+  img {
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 8999;
-  }
-  .active {
+    object-fit: cover;
     display: block;
   }
-  .modal-content {
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+  
+  h4 {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 7999;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    margin: 0;
+    padding: 6px 10px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
-  .modal-content img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+  
+  &:hover h4 {
+    opacity: 1;
   }
-  ul, ol {
-    padding-left: 40px; /* Adjust the value as needed */
-  }
-  .social-links a {
-    font-size: map-get($font-sizes, 2xl);
-    color:#5B8C5A;
-  }
-  .top-right {
-    position: absolute;
-    top: 1px;
-    right: 10px;
-  }
+}
+
+.gallery-item-wrapper {
+  height: 300px; // Base height for the row
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white; // Optional: adds white background for partially transparent images
+}
+
+.hover-details {
+  display: none; /* Hide the details by default */
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  color: white;
+  padding: 20px;
+  margin-top: 10px; 
+  border-radius: 8px; /* Add rounded corners */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 60%;
+  max-height: 80%;
+  z-index: 9999;
+  pointer-events: none; 
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 8999;
+}
+.active {
+  display: block;
+}
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 7999;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.modal-content img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+ul, ol {
+  padding-left: 40px; /* Adjust the value as needed */
+}
+.social-links a {
+  font-size: map.get($font-sizes, 2xl);
+  color:#5B8C5A;
+}
+.top-right {
+  position: absolute;
+  top: 1px;
+  right: 10px;
+}

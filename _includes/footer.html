@@ -1,5 +1,10 @@
 <footer class="site-footer">
     <div class="footer-content">
+        <nav class="footer-nav" aria-label="Footer Navigation">
+            {% for link in site.data.navigation %}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            {% endfor %}
+        </nav>
         <div class="footer-primary">
             <p class="copyright">&copy; {{ 'now' | date: "%Y" }} {{ site.author }}</p>
             
@@ -22,10 +27,5 @@
             {% endif %}
         </div>
         
-        <nav class="footer-nav" aria-label="Footer Navigation">
-            {% for link in site.data.navigation %}
-            <a href="{{ link.url }}">{{ link.title }}</a>
-            {% endfor %}
-        </nav>
     </div>
 </footer>
