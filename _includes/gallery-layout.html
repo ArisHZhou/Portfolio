@@ -8,14 +8,17 @@
                          srcset="{{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=300' }} 300w,
                                  {{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=600' }} 600w,
                                  {{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=900' }} 900w"
-                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                         sizes="(max-width: 768px) 300px, (max-width: 1200px) 600px, 900px"
                          alt="{{ illustration.title }}" 
+                         style="background-color: #f0f0f0; opacity: 0; transition: opacity 0.3s ease;"
+                         width="300"
+                         height="300"
                          loading="lazy"
                          data-id="{{ forloop.index }}"
                          data-full-src="{{ illustration.image_path | relative_url }}"
                          data-width="{{ illustration.width | default: 0 }}"
                          data-height="{{ illustration.height | default: 0 }}"
-                         onload="if(this.naturalWidth && this.naturalHeight) { this.dataset.width = this.naturalWidth; this.dataset.height = this.naturalHeight; }">
+                         onload="this.style.opacity = '1'; if(this.naturalWidth && this.naturalHeight) { this.dataset.width = this.naturalWidth; this.dataset.height = this.naturalHeight; }">
                     {% if illustration.mytitle %}
                     <div class="gallery-item-overlay">
                         <h4>{{ illustration.mytitle }}</h4>
