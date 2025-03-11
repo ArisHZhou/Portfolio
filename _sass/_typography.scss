@@ -2,8 +2,10 @@
 @use 'variables';
 @use 'mixins';
 
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap');
+
 body {
-  font-family: map.get(variables.$font-families, primary);
+  font-family: map.get(variables.$font-families, aris);
   font-size: map.get(variables.$font-sizes, base);
   line-height: 1.5;
   color: map.get(map.get(variables.$colors, neutral), gray-500);
