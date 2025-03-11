@@ -298,10 +298,8 @@ export class Gallery {
     
     // Close modal when clicking outside the content
     this.galleryModal.addEventListener('click', (e) => {
-      if (e.target === this.galleryModal) {
         this.galleryModal.classList.remove('active');
         document.body.style.overflow = ''; // Restore scrolling
-      }
     });
     
     // Close modal with Escape key
