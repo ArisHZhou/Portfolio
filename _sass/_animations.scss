@@ -1,11 +1,14 @@
-// Add timing variables
+
+@use 'sass:map';
+@use 'variables' as *;
+
+// Animation specific variables
 $animation-speeds: (
   fast: 0.2s,
   medium: 0.3s,
   slow: 0.5s
 );
 
-// Add easing variables
 $easings: (
   default: cubic-bezier(0.4, 0, 0.2, 1),
   in: cubic-bezier(0.4, 0, 1, 1),
@@ -18,12 +21,129 @@ $easings: (
     opacity: 0;
     transform: scale(0.9);
     transition: 
-      opacity map-get($animation-speeds, medium) map-get($easings, out),
-      transform map-get($animation-speeds, medium) map-get($easings, out);
+      opacity map.get($animation-speeds, medium) map.get($easings, out),
+      transform map.get($animation-speeds, medium) map.get($easings, out);
     
     &.active {
       opacity: 1;
       transform: scale(1);
     }
+  }
+}
+
+// Base animation classes
+.will-animate {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.animate-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+// Header animations
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+
+  &.header-hidden {
+    transform: translateY(-100%);
+  }
+}
+
+// Keyframe animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Animation variants
+[data-animate="fade-up"] {
+  &.will-animate {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  
+  &.animate-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+}
+
+[data-animate="scale"] {
+  &.will-animate {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  
+  &.animate-in {
+    animation: scaleIn 0.6s ease-out forwards;
+  }
+}
+
+// Gallery animations
+.gallery {
+  .gallery-item {
+    opacity: 0;
+    transform: translateY(40px) scale(0.92);
+    transition: 
+      opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+    
+    &.animate-in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .gallery-image-container {
+      overflow: hidden;
+      
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+
+    &:hover {
+      .gallery-image-container img {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+// Stagger animations
+@for $i from 1 through 20 {
+  .gallery-item[data-delay="#{$i * 100}"] {
+    transition-delay: #{$i * 0.1}s;
   }
 }

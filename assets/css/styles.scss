@@ -10,6 +10,7 @@
 @use 'navigation';
 @use 'pages';
 @use 'gallery';
+@use 'animations';
 
 :root {
   @each $radius-name, $value in $border-radius {

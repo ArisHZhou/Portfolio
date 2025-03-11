@@ -19,8 +19,24 @@ export class GalleryModal {
     this.styleElement = document.createElement('style');
     document.head.appendChild(this.styleElement);
     this.styleElement.textContent = `
+      body .gallery-modal {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
       body .gallery-modal.active {
+        opacity: 1;
+        visibility: visible;
         padding: 0 !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 9999;
       }
       body .gallery-modal.active .modal-content {
         width: 100vw !important;
@@ -33,6 +49,8 @@ export class GalleryModal {
         justify-content: center !important;
         align-items: center !important;
         background-color: rgba(0,0,0,0.9) !important;
+        transform: translateZ(0);
+        backface-visibility: hidden;
       }
       body .gallery-modal.active img {
         max-width: 95vw !important;
@@ -40,6 +58,9 @@ export class GalleryModal {
         width: auto !important;
         height: auto !important;
         object-fit: contain !important;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        will-change: transform;
       }
     `;
   }
@@ -63,65 +84,46 @@ export class GalleryModal {
   open(imageSrc, fullSrc, title = '', description = '') {
     if (!this.modalImage || !this.modal) return;
     
-    // Use the full-size image for the modal if available
-    this.modalImage.src = fullSrc || imageSrc;
-    
-    // Set title and description if provided, but they won't be visible
-    if (this.modalTitle) {
-      this.modalTitle.textContent = title || '';
-      this.modalTitle.style.display = 'none';
-    }
-    
-    if (this.modalDescription) {
-      this.modalDescription.innerHTML = description || '';
-      this.modalDescription.style.display = 'none';
-    }
-    
-    // Ensure modal-details is always hidden
-    if (this.modalDetails) {
-      this.modalDetails.style.display = 'none';
-    }
-    
-    // Apply direct styles to ensure fullscreen
-    this.modal.style.cssText = 'display: flex !important; align-items: center !important; justify-content: center !important; padding: 0 !important;';
-    
-    const modalContent = this.modal.querySelector('.modal-content');
-    if (modalContent) {
-      modalContent.style.cssText = 'width: 100vw !important; height: 100vh !important; max-width: none !important; max-height: none !important; margin: 0 !important; padding: 0 !important; display: flex !important; justify-content: center !important; align-items: center !important; background-color: rgba(0,0,0,0.9) !important;';
-    }
-    
-    if (this.modalImage) {
-      this.modalImage.style.cssText = 'max-width: 95vw !important; max-height: 95vh !important; width: auto !important; height: auto !important; object-fit: contain !important;';
+    // Preload the image before showing the modal
+    const img = new Image();
+    img.onload = () => {
+      // Use the full-size image for the modal if available
+      this.modalImage.src = fullSrc || imageSrc;
       
-      // Prevent clicks on the image from closing the modal
-      this.modalImage.addEventListener('click', e => e.stopPropagation());
-    }
-    
-    // Add click handler to the modal content for closing
-    this.modal.addEventListener('click', this.clickHandler);
-    
-    // Show modal
-    setTimeout(() => {
-      this.modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      this.isOpen = true;
+      if (this.modalTitle) {
+        this.modalTitle.textContent = title || '';
+        this.modalTitle.style.display = 'none';
+      }
       
-      // Add keyboard event listener when modal opens
-      document.addEventListener('keydown', this.keydownHandler);
-    }, 10);
-
-    // Animate modal opening
-    if (typeof gsap !== 'undefined') {
-      gsap.fromTo(this.modal, 
-        { opacity: 0 },
-        { opacity: 1, duration: 0.3 }
-      );
+      if (this.modalDescription) {
+        this.modalDescription.innerHTML = description || '';
+        this.modalDescription.style.display = 'none';
+      }
       
-      gsap.fromTo(this.modalImage,
-        { scale: 0.9, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.4, delay: 0.1 }
-      );
-    }
+      if (this.modalDetails) {
+        this.modalDetails.style.display = 'none';
+      }
+      
+      // Add click handler to the modal content for closing
+      this.modal.addEventListener('click', this.clickHandler);
+      
+      // Show modal
+      requestAnimationFrame(() => {
+        this.modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        this.isOpen = true;
+        document.addEventListener('keydown', this.keydownHandler);
+        
+        if (typeof gsap !== 'undefined') {
+          gsap.fromTo(this.modalImage,
+            { scale: 0.9, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.4, delay: 0.1 }
+          );
+        }
+      });
+    };
+    
+    img.src = fullSrc || imageSrc;
   }
 
   close() {

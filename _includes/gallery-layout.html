@@ -1,7 +1,7 @@
 <div class="gallery">
     <div class="gallery-grid">
         {% for illustration in include.collection %}
-        <div class="gallery-item">
+        <div class="gallery-item" data-animate="scale" data-delay="{{ forloop.index | times: 100 }}">
             {% if illustration.image_path %}
                 <div class="gallery-image-container">
                     <img src="{{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=300' }}" 
@@ -10,7 +10,7 @@
                                  {{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=900' }} 900w"
                          sizes="(max-width: 768px) 300px, (max-width: 1200px) 600px, 900px"
                          alt="{{ illustration.title }}" 
-                         style="background-color: #f0f0f0; opacity: 0; transition: opacity 0.3s ease;"
+                         style="background-color: #f0f0f0;"
                          width="300"
                          height="300"
                          loading="lazy"
@@ -18,7 +18,7 @@
                          data-full-src="{{ illustration.image_path | relative_url }}"
                          data-width="{{ illustration.width | default: 0 }}"
                          data-height="{{ illustration.height | default: 0 }}"
-                         onload="this.style.opacity = '1'; if(this.naturalWidth && this.naturalHeight) { this.dataset.width = this.naturalWidth; this.dataset.height = this.naturalHeight; }">
+                         onload="if(this.naturalWidth && this.naturalHeight) { this.dataset.width = this.naturalWidth; this.dataset.height = this.naturalHeight; }">
                     {% if illustration.mytitle %}
                     <div class="gallery-item-overlay">
                         <h4>{{ illustration.mytitle }}</h4>
@@ -53,7 +53,26 @@
 <script>
     // Ensure layout recalculates after all images are loaded
     window.addEventListener('load', function() {
-        // Dispatch a custom event that the gallery layout should be recalculated
+        // Initialize Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        });
+
+        // Observe all gallery items
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.classList.add('will-animate');
+            observer.observe(item);
+        });
+
+        // Dispatch gallery filtered event
         setTimeout(function() {
             const event = new CustomEvent('gallery:filtered');
             document.dispatchEvent(event);

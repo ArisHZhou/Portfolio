@@ -5,8 +5,8 @@
 .gallery {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0;
+  margin: 0.1rem auto 0;
+  //padding: 1rem;
   box-sizing: border-box;
   display: block !important;
   font-size: 0; /* Remove inline-block spacing */
