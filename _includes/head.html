@@ -17,9 +17,9 @@
     <meta property="og:image" content="{{ page.image_path | default: site.og_image | absolute_url }}">
     
     <!-- Preload Critical Assets -->
-    <link rel="preload" href="{% include cdn_url.html type='css' file='styles.css' %}" as="style">
-    <link rel="stylesheet" href="{% include cdn_url.html type='css' file='styles.css' %}">
-    <link rel="preload" href="{% include cdn_url.html type='js' file='bundle.js' %}" as="script">
+    <link rel="preload" href="{{ '/assets/css/styles.css' | relative_url }}" as="style">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="preload" href="{{ '/assets/js/bundle.js' | relative_url }}" as="script">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Theme -->
