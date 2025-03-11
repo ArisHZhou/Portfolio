@@ -1,0 +1,227 @@
+@use 'sass:map';
+@use 'variables' as *;
+
+// Gallery Layout
+.gallery {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  display: block !important;
+  font-size: 0; /* Remove inline-block spacing */
+}
+
+.gallery-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  width: 100% !important;
+  margin: 0;
+  font-size: 0; /* Remove inline-block spacing */
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  padding: 2px; /* Add a small padding for spacing between images */
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 0; /* Remove inline-block spacing */
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Set column widths - these will be overridden by JavaScript for the justified layout
+.gallery-item {
+  width: 33.333%;
+  
+  @media (max-width: 1024px) {
+    width: 50%;
+  }
+  
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+}
+
+.gallery-image-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  display: block;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+}
+
+// For when JavaScript sets fixed heights on rows
+.gallery-image-container[style*="height"] {
+  img {
+    max-height: 100%;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+}
+
+.gallery-item-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  h4 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: normal;
+    color: white;
+    text-align: center;
+  }
+}
+
+.gallery-item:hover .gallery-item-overlay {
+  opacity: 1;
+}
+
+// Gallery Modal
+.gallery-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  overflow: auto;
+  
+  &.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+  margin: 0 auto;
+  
+  img {
+    max-width: 100%;
+    max-height: 80vh;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    object-fit: contain; // Keep contain for modal view
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.modal-details {
+  background-color: white;
+  padding: 20px;
+  margin-top: 20px;
+  max-width: 600px;
+  margin: 20px auto 0;
+  font-size: 16px; /* Reset font size for modal content */
+  
+  h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+  }
+}
+
+.modal-categories {
+  margin-top: 15px;
+  
+  .category-tag {
+    display: inline-block;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+}
+
+// Filter buttons
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  font-size: 16px; /* Reset font size for filter buttons */
+  
+  .filter-btn {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &.active, &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .gallery {
+    padding: 0;
+  }
+  
+  .gallery-grid {
+    margin: 0;
+  }
+  
+  .gallery-item {
+    padding: 1px; /* Smaller padding on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    max-width: 95%;
+  }
+  
+  .modal-details {
+    padding: 15px;
+  }
+} 
