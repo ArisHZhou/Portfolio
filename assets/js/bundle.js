@@ -396,10 +396,14 @@
     constructor() {
       this.buttons = document.querySelectorAll('.filter-btn');
       this.items = document.querySelectorAll('.gallery-item');
+      this.gallery = document.querySelector('.gallery');
+      this.galleryGrid = document.querySelector('.gallery-grid');
     }
 
     init() {
-      this.setupFilterButtons();
+      if (this.buttons.length > 0) {
+        this.setupFilterButtons();
+      }
     }
 
     setupFilterButtons() {
@@ -413,11 +417,58 @@
     }
 
     filterItems(category) {
+      // Store visible items to animate them later
+      const visibleItems = [];
+      const hiddenItems = [];
+      
       this.items.forEach(item => {
         const shouldShow = category === 'all' || 
                           item.dataset.category === category;
-        item.style.display = shouldShow ? 'block' : 'none';
+        
+        if (shouldShow) {
+          visibleItems.push(item);
+          item.style.display = '';
+        } else {
+          hiddenItems.push(item);
+        }
       });
+      
+      // First animate out hidden items
+      if (typeof gsap !== 'undefined') {
+        gsap.to(hiddenItems, {
+          opacity: 0,
+          scale: 0.8,
+          duration: 0.3,
+          stagger: 0.05,
+          onComplete: () => {
+            hiddenItems.forEach(item => {
+              item.style.display = 'none';
+            });
+            
+            // Then animate in visible items
+            gsap.fromTo(visibleItems, 
+              { opacity: 0, scale: 0.8 },
+              { 
+                opacity: 1, 
+                scale: 1, 
+                duration: 0.3, 
+                stagger: 0.05,
+                onComplete: () => {
+                  // Adjust layout after animation
+                  if (this.galleryGrid) {
+                    this.galleryGrid.style.opacity = 1;
+                  }
+                }
+              }
+            );
+          }
+        });
+      } else {
+        // Fallback for when gsap is not available
+        hiddenItems.forEach(item => {
+          item.style.display = 'none';
+        });
+      }
     }
 
     updateActiveButton(activeButton) {
@@ -428,74 +479,370 @@
 
   class GalleryModal {
     constructor() {
-      this.modal = document.querySelector('.modal');
-      this.modalImage = this.modal?.querySelector('img');
-      this.modalContent = this.modal?.querySelector('.modal-content');
-      this.closeButton = this.modal?.querySelector('.close');
-      this.hoverDetails = this.modal?.querySelector('.hover-details');
+      this.modal = document.querySelector('.gallery-modal');
+      this.modalImage = this.modal?.querySelector('.modal-content img');
+      this.modalTitle = this.modal?.querySelector('.modal-title');
+      this.modalDescription = this.modal?.querySelector('.modal-description');
+      this.modalDetails = this.modal?.querySelector('.modal-details');
+      this.closeButton = this.modal?.querySelector('.modal-close');
       this.isOpen = false;
+      this.keydownHandler = this.handleKeydown.bind(this);
+      this.clickHandler = this.handleClick.bind(this);
+      
+      // Completely disable modal-details if it exists
+      if (this.modalDetails) {
+        this.modalDetails.style.display = 'none';
+      }
+      
+      // Add a style element to override modal styles - use a more specific selector
+      this.styleElement = document.createElement('style');
+      document.head.appendChild(this.styleElement);
+      this.styleElement.textContent = `
+      body .gallery-modal.active {
+        padding: 0 !important;
+      }
+      body .gallery-modal.active .modal-content {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: none !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        background-color: rgba(0,0,0,0.9) !important;
+      }
+      body .gallery-modal.active img {
+        max-width: 95vw !important;
+        max-height: 95vh !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: contain !important;
+      }
+    `;
     }
 
     init() {
       if (!this.modal) return;
-      this.setupEventListeners();
+      // We'll set up event listeners in the open method to avoid conflicts
     }
-
-    setupEventListeners() {
-      this.closeButton?.addEventListener('click', () => this.close());
-      this.modalContent?.addEventListener('mouseenter', (event) => {
-        if (event.target !== this.modalContent) return;
-        this.hoverDetails.style.display = 'block';
-    });
     
-    this.modalContent?.addEventListener('mouseleave', (event) => {
-        if (event.target !== this.modalContent) return;
-        this.hoverDetails.style.display = 'none'; 
-    });
-      this.modal?.addEventListener('click', (e) => {
-        //console.log(e.target);
-        //if (e.target === this.modal) this.close();
-        this.close(); 
-      });
-
-      // Handle keyboard events
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this.isOpen) this.close();
-      });
+    handleClick(e) {
+      // Close if clicking outside the image
+      if (e.target !== this.modalImage) {
+        this.close();
+      }
+    }
+    
+    handleKeydown(e) {
+      if (e.key === 'Escape' && this.isOpen) this.close();
     }
 
-    open(imageSrc) {
+    open(imageSrc, fullSrc, title = '', description = '') {
       if (!this.modalImage || !this.modal) return;
       
-      this.modalImage.src = imageSrc;
-      this.modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      this.isOpen = true;
+      // Use the full-size image for the modal if available
+      this.modalImage.src = fullSrc || imageSrc;
+      
+      // Set title and description if provided, but they won't be visible
+      if (this.modalTitle) {
+        this.modalTitle.textContent = title || '';
+        this.modalTitle.style.display = 'none';
+      }
+      
+      if (this.modalDescription) {
+        this.modalDescription.innerHTML = description || '';
+        this.modalDescription.style.display = 'none';
+      }
+      
+      // Ensure modal-details is always hidden
+      if (this.modalDetails) {
+        this.modalDetails.style.display = 'none';
+      }
+      
+      // Apply direct styles to ensure fullscreen
+      this.modal.style.cssText = 'display: flex !important; align-items: center !important; justify-content: center !important; padding: 0 !important;';
+      
+      const modalContent = this.modal.querySelector('.modal-content');
+      if (modalContent) {
+        modalContent.style.cssText = 'width: 100vw !important; height: 100vh !important; max-width: none !important; max-height: none !important; margin: 0 !important; padding: 0 !important; display: flex !important; justify-content: center !important; align-items: center !important; background-color: rgba(0,0,0,0.9) !important;';
+      }
+      
+      if (this.modalImage) {
+        this.modalImage.style.cssText = 'max-width: 95vw !important; max-height: 95vh !important; width: auto !important; height: auto !important; object-fit: contain !important;';
+        
+        // Prevent clicks on the image from closing the modal
+        this.modalImage.addEventListener('click', e => e.stopPropagation());
+      }
+      
+      // Add click handler to the modal content for closing
+      this.modal.addEventListener('click', this.clickHandler);
+      
+      // Show modal
+      setTimeout(() => {
+        this.modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        this.isOpen = true;
+        
+        // Add keyboard event listener when modal opens
+        document.addEventListener('keydown', this.keydownHandler);
+      }, 10);
 
       // Animate modal opening
-      gsap.fromTo(this.modal, 
-        { opacity: 0 },
-        { opacity: 1, duration: 0.3 }
-      );
-      
-      gsap.fromTo(this.modalImage,
-        { scale: 0.8, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.4, delay: 0.1 }
-      );
+      if (typeof gsap !== 'undefined') {
+        gsap.fromTo(this.modal, 
+          { opacity: 0 },
+          { opacity: 1, duration: 0.3 }
+        );
+        
+        gsap.fromTo(this.modalImage,
+          { scale: 0.9, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.4, delay: 0.1 }
+        );
+      }
     }
 
     close() {
-      if (!this.modal) return;
+      if (!this.modal || !this.isOpen) return;
+      
+      // Remove event listeners
+      document.removeEventListener('keydown', this.keydownHandler);
+      this.modal.removeEventListener('click', this.clickHandler);
+      
+      if (this.modalImage) {
+        this.modalImage.removeEventListener('click', e => e.stopPropagation());
+      }
 
-      gsap.to(this.modal, {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => {
-          this.modal.classList.remove('active');
-          document.body.style.overflow = '';
-          this.isOpen = false;
+      const completeClose = () => {
+        this.modal.classList.remove('active');
+        this.modal.style = '';
+        document.body.style.overflow = '';
+        this.isOpen = false;
+        
+        // Reset image src
+        if (this.modalImage) {
+          this.modalImage.src = '';
+          this.modalImage.style = '';
+        }
+        
+        // Reset title and description
+        if (this.modalTitle) {
+          this.modalTitle.textContent = '';
+          this.modalTitle.style.display = '';
+        }
+        
+        if (this.modalDescription) {
+          this.modalDescription.innerHTML = '';
+          this.modalDescription.style.display = '';
+        }
+        
+        // Ensure modal-details remains hidden
+        if (this.modalDetails) {
+          this.modalDetails.style.display = 'none';
+        }
+        
+        // Reset modal content styles
+        const modalContent = this.modal.querySelector('.modal-content');
+        if (modalContent) {
+          modalContent.style = '';
+        }
+      };
+
+      if (typeof gsap !== 'undefined') {
+        gsap.to(this.modal, {
+          opacity: 0,
+          duration: 0.3,
+          onComplete: completeClose
+        });
+      } else {
+        completeClose();
+      }
+    }
+  }
+
+  /**
+   * GalleryLayout.js
+   * Handles the masonry-like grid layout for the gallery
+   */
+
+  class GalleryLayout {
+    constructor(galleryGrid) {
+      this.galleryGrid = galleryGrid;
+      this.items = galleryGrid.querySelectorAll('.gallery-item');
+      this.resizeTimeout = null;
+      this.itemPadding = 4; // 2px padding on each side (left+right)
+    }
+
+    init() {
+      // Setup resize handler with debounce
+      window.addEventListener('resize', this.handleResize.bind(this));
+      
+      // Setup image load events
+      this.setupImageLoadEvents();
+    }
+
+    /**
+     * Setup image load events to organize rows after images are loaded
+     */
+    setupImageLoadEvents() {
+      const images = document.querySelectorAll('.gallery-image-container img');
+      
+      // Count how many images are loaded
+      let loadedImages = 0;
+      const totalImages = images.length;
+      
+      if (totalImages === 0) return;
+      
+      // Function to check if all images are loaded
+      const checkAllImagesLoaded = () => {
+        loadedImages++;
+        if (loadedImages === totalImages) {
+          this.organizeImagesInRows();
+        }
+      };
+      
+      // Add load event to each image
+      images.forEach(img => {
+        if (img.complete) {
+          checkAllImagesLoaded();
+        } else {
+          img.addEventListener('load', checkAllImagesLoaded);
+        }
+        
+        // Handle error case
+        img.addEventListener('error', checkAllImagesLoaded);
+      });
+    }
+
+    /**
+     * Handle window resize events with debounce
+     */
+    handleResize() {
+      // Debounce resize event
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => {
+        this.organizeImagesInRows();
+      }, 200);
+    }
+
+    /**
+     * Organize images in rows with equal heights
+     * This implementation creates a more compact layout without white spaces
+     */
+    organizeImagesInRows() {
+      // Get all gallery items
+      const items = Array.from(document.querySelectorAll('.gallery-item'));
+      if (!items.length) return;
+      
+      // Reset any previously set heights
+      items.forEach(item => {
+        const imgContainer = item.querySelector('.gallery-image-container');
+        if (imgContainer) {
+          imgContainer.style.height = 'auto';
         }
       });
+      
+      // Get the current gallery width
+      const galleryWidth = this.galleryGrid.clientWidth;
+      
+      // Determine number of columns based on screen width
+      let columnsPerRow;
+      if (window.innerWidth <= 480) {
+        columnsPerRow = 1;
+        this.itemPadding = 2; // 1px padding on each side for mobile
+      } else if (window.innerWidth <= 1024) {
+        columnsPerRow = 2;
+        this.itemPadding = 4; // 2px padding on each side for tablets
+      } else {
+        columnsPerRow = 3;
+        this.itemPadding = 4; // 2px padding on each side for desktop
+      }
+      
+      // Calculate the width of each item (accounting for padding)
+      this.itemPadding * columnsPerRow;
+      
+      // Group items into rows
+      const rows = [];
+      let currentRow = [];
+      
+      items.forEach((item, index) => {
+        currentRow.push(item);
+        
+        // When we reach the number of columns per row or the last item
+        if (currentRow.length === columnsPerRow || index === items.length - 1) {
+          rows.push([...currentRow]);
+          currentRow = [];
+        }
+      });
+      
+      // Process each row to set equal heights
+      rows.forEach(row => {
+        // Calculate the total aspect ratio for the row
+        let totalAspectRatio = 0;
+        let validImages = 0;
+        
+        row.forEach(item => {
+          const img = item.querySelector('img');
+          if (img && img.complete) {
+            const aspectRatio = img.naturalWidth / img.naturalHeight;
+            totalAspectRatio += aspectRatio;
+            validImages++;
+          }
+        });
+        
+        // If no valid images, skip this row
+        if (validImages === 0) return;
+        
+        // Calculate the row height based on the total aspect ratio
+        // Account for padding in the calculation
+        const rowWidth = galleryWidth - (row.length * this.itemPadding);
+        const rowHeight = rowWidth / totalAspectRatio;
+        
+        // Set the height for all items in this row
+        row.forEach(item => {
+          const imgContainer = item.querySelector('.gallery-image-container');
+          const img = item.querySelector('img');
+          
+          if (imgContainer && img && img.complete) {
+            const aspectRatio = img.naturalWidth / img.naturalHeight;
+            
+            // Calculate the width for this item based on its aspect ratio
+            // Account for padding in the calculation
+            const calculatedWidth = (aspectRatio / totalAspectRatio) * rowWidth;
+            
+            // Set the width and height
+            item.style.width = `${calculatedWidth}px`;
+            imgContainer.style.height = `${rowHeight}px`;
+          }
+        });
+      });
+    }
+
+    /**
+     * Add a new item to the gallery and recalculate layout
+     */
+    addItem(item) {
+      // Add the item to the DOM
+      this.galleryGrid.appendChild(item);
+      
+      // Setup load event for the new image
+      const img = item.querySelector('img');
+      if (img) {
+        if (img.complete) {
+          this.organizeImagesInRows();
+        } else {
+          img.addEventListener('load', () => this.organizeImagesInRows());
+          img.addEventListener('error', () => this.organizeImagesInRows());
+        }
+      }
+    }
+
+    /**
+     * Clean up event listeners
+     */
+    destroy() {
+      window.removeEventListener('resize', this.handleResize.bind(this));
     }
   }
 
@@ -507,12 +854,16 @@
       this.imageOptimizer = new ImageOptimizer();
       this.gallery = document.querySelector('.gallery');
       this.uploadInput = document.querySelector('#gallery-upload');
-      this.galleryRow = document.querySelector('.gallery-row');
-      this.targetRowHeight = 250; // Target row height in pixels
-      this.spacing = 4; // Spacing between images
-
+      this.galleryGrid = document.querySelector('.gallery-grid');
+      this.galleryModal = document.querySelector('.gallery-modal');
+      
       this.hamburger = document.querySelector('.hamburger');
-      this.menu = document.querySelector('#primary-navigation'); // Use your menu's ID
+      this.menu = document.querySelector('#primary-navigation');
+      
+      // Initialize the gallery layout manager
+      if (this.galleryGrid) {
+        this.layout = new GalleryLayout(this.galleryGrid);
+      }
     }
 
     init() {
@@ -521,38 +872,54 @@
       this.setupItemInteractions();
       this.setupImageUpload();
       this.setupLazyLoading();
-      this.setupGalleryLayout();
       this.setupModalFunctionality();
 
-      this.hamburger.addEventListener('click', () => {
-        this.hamburger.classList.toggle('active');
-        this.menu.classList.toggle('active'); 
+      if (this.hamburger && this.menu) {
+        this.hamburger.addEventListener('click', () => {
+          this.hamburger.classList.toggle('active');
+          this.menu.classList.toggle('active'); 
+        });
+      }
+      
+      // Initialize the layout manager
+      if (this.layout) {
+        this.layout.init();
+      }
+      
+      // Add event listener for filter changes to recalculate layout
+      document.addEventListener('gallery:filtered', () => {
+        if (this.layout) {
+          setTimeout(() => this.layout.organizeImagesInRows(), 100);
+        }
       });
     }
 
     setupItemInteractions() {
       this.items.forEach(item => {
-        // Setup click handling
+        // Setup click handling for modal
         item.addEventListener('click', () => {
-          const imgSrc = item.querySelector('img').src;
-          this.modal.open(imgSrc);
-        });
-
-        // Setup hover animations
-        item.addEventListener('mouseenter', () => {
-          gsap.to(item, {
-            scale: 1.02,
-            duration: 0.3
-          });
-        });
-
-        item.addEventListener('mouseleave', () => {
-          gsap.to(item, {
-            scale: 1,
-            duration: 0.3
-          });
+          const img = item.querySelector('img');
+          if (!img) return;
+          
+          const fullSrc = img.dataset.fullSrc || img.src;
+          const title = item.querySelector('h4')?.textContent || '';
+          
+          this.openModal(fullSrc, title);
         });
       });
+    }
+    
+    openModal(imgSrc, title) {
+      if (!this.galleryModal) return;
+      
+      const modalImg = this.galleryModal.querySelector('.modal-content img');
+      const modalTitle = this.galleryModal.querySelector('.modal-title');
+      
+      if (modalImg) modalImg.src = imgSrc;
+      if (modalTitle) modalTitle.textContent = title;
+      
+      this.galleryModal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
     }
 
     setupImageUpload() {
@@ -576,7 +943,6 @@
         });
       } catch (error) {
         console.error('Failed to process images:', error);
-        // Show error notification to user
         this.showNotification('Failed to process some images', 'error');
       }
     }
@@ -610,27 +976,44 @@
       // Create new gallery item
       const galleryItem = document.createElement('div');
       galleryItem.className = 'gallery-item';
-      galleryItem.dataset.category = 'uploaded'; // or determine based on image type
+      galleryItem.dataset.category = 'uploaded';
+
+      // Create image container
+      const imageContainer = document.createElement('div');
+      imageContainer.className = 'gallery-image-container';
 
       // Create image element with responsive attributes
       const img = document.createElement('img');
       img.src = URL.createObjectURL(original);
       img.srcset = srcset;
-      img.sizes = '(max-width: 320px) 280px, (max-width: 640px) 580px, (max-width: 960px) 780px, 1100px';
+      img.sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw';
       img.alt = name;
       img.loading = 'lazy';
+      
+      // Store natural dimensions for layout calculations
+      img.dataset.width = original.width || 0;
+      img.dataset.height = original.height || 0;
 
-      // Create title element
-      const title = document.createElement('div');
-      title.className = 'gallery-item-title';
+      // Create overlay with title
+      const overlay = document.createElement('div');
+      overlay.className = 'gallery-item-overlay';
+      
+      const title = document.createElement('h4');
       title.textContent = name;
+      overlay.appendChild(title);
 
       // Assemble gallery item
-      galleryItem.appendChild(img);
-      galleryItem.appendChild(title);
+      imageContainer.appendChild(img);
+      imageContainer.appendChild(overlay);
+      galleryItem.appendChild(imageContainer);
 
       // Add to gallery with animation
-      this.gallery.appendChild(galleryItem);
+      if (this.layout) {
+        this.layout.addItem(galleryItem);
+      } else {
+        this.galleryGrid.appendChild(galleryItem);
+      }
+      
       this.animateNewItem(galleryItem);
 
       // Setup interactions for new item
@@ -638,58 +1021,69 @@
     }
 
     setupSingleItemInteractions(item) {
-      // Click handling
+      // Click handling for modal
       item.addEventListener('click', () => {
-        const imgSrc = item.querySelector('img').src;
-        this.modal.open(imgSrc);
-      });
-
-      // Hover animations
-      item.addEventListener('mouseenter', () => {
-        gsap.to(item, {
-          scale: 1.02,
-          duration: 0.3
-        });
-      });
-
-      item.addEventListener('mouseleave', () => {
-        gsap.to(item, {
-          scale: 1,
-          duration: 0.3
-        });
+        const img = item.querySelector('img');
+        if (!img) return;
+        
+        const fullSrc = img.dataset.fullSrc || img.src;
+        const title = item.querySelector('h4')?.textContent || '';
+        
+        this.openModal(fullSrc, title);
       });
     }
 
     animateNewItem(item) {
-      gsap.from(item, {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        ease: 'power2.out'
-      });
+      if (typeof gsap !== 'undefined') {
+        gsap.from(item, {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      } else {
+        // Fallback if GSAP is not available
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+          item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          item.style.opacity = '1';
+          item.style.transform = 'translateY(0)';
+        }, 10);
+      }
     }
 
     setupLazyLoading() {
-      const images = this.gallery.querySelectorAll('img[loading="lazy"]');
-      const imageObserver = new IntersectionObserver(
-        (entries, observer) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const img = entry.target;
-              if (img.dataset.src) {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
+      if ('IntersectionObserver' in window) {
+        const images = this.gallery.querySelectorAll('img[loading="lazy"]');
+        const imageObserver = new IntersectionObserver(
+          (entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                  img.src = img.dataset.src;
+                  img.removeAttribute('data-src');
+                }
+                observer.unobserve(img);
+                
+                // Recalculate layout after image loads
+                img.addEventListener('load', () => {
+                  if (this.layout) {
+                    this.layout.organizeImagesInRows();
+                  }
+                });
               }
-              observer.unobserve(img);
-            }
-          });
-        },
-        {
-          rootMargin: '50px 0px'
-        }
-      );
+            });
+          },
+          {
+            rootMargin: '50px 0px'
+          }
+        );
 
-      images.forEach(img => imageObserver.observe(img));
+        images.forEach(img => imageObserver.observe(img));
+      }
     }
 
     showNotification(message, type = 'info') {
@@ -699,214 +1093,75 @@
 
       document.body.appendChild(notification);
 
-      gsap.fromTo(notification,
-        { y: -50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3 }
-      );
+      if (typeof gsap !== 'undefined') {
+        gsap.fromTo(notification,
+          { y: -50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.3 }
+        );
 
-      setTimeout(() => {
-        gsap.to(notification, {
-          opacity: 0,
-          y: -50,
-          duration: 0.3,
-          onComplete: () => notification.remove()
-        });
-      }, 3000);
-    }
-
-    // Method to update gallery layout (e.g., after filtering)
-    updateLayout() {
-      gsap.to(this.gallery, {
-        opacity: 1,
-        duration: 0.3,
-        clearProps: 'all'
-      });
-    }
-
-    setupGalleryLayout() {
-      // Wait for images to load before layout
-      let loadedImages = 0;
-      const totalImages = this.items.length;
-      
-      this.items.forEach(item => {
-        const img = item.querySelector('img');
-        if (img) {
-          if (img.complete) {
-            loadedImages++;
-            if (loadedImages === totalImages) {
-              this.layoutGallery();
-            }
-          } else {
-            img.onload = () => {
-              loadedImages++;
-              if (loadedImages === totalImages) {
-                this.layoutGallery();
-              }
-            };
-          }
-        }
-      });
-      
-      // Relayout on window resize
-      let resizeTimer;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => this.layoutGallery(), 200);
-      });
-    }
-
-    layoutGallery() {
-      if (!this.galleryRow) return;
-      
-      // Reset all styles first
-      this.items.forEach(item => {
-        item.style.width = '';
-        item.style.height = '';
-        item.style.marginRight = '';
-        item.style.marginBottom = '';
-      });
-      
-      const containerWidth = this.galleryRow.clientWidth;
-      let currentRow = [];
-      let currentRowWidth = 0;
-      
-      // Process each gallery item
-      this.items.forEach((item, index) => {
-        const img = item.querySelector('img');
-        if (!img || !img.complete) return;
+        setTimeout(() => {
+          gsap.to(notification, {
+            opacity: 0,
+            y: -50,
+            duration: 0.3,
+            onComplete: () => notification.remove()
+          });
+        }, 3000);
+      } else {
+        // Fallback if GSAP is not available
+        notification.style.transform = 'translateY(-50px)';
+        notification.style.opacity = '0';
         
-        // Get natural dimensions
-        const imgWidth = img.naturalWidth || 1;
-        const imgHeight = img.naturalHeight || 1;
-        const aspectRatio = imgWidth / imgHeight;
-        
-        // Calculate scaled width based on target height
-        const scaledWidth = Math.floor(this.targetRowHeight * aspectRatio);
-        
-        // Add to current row
-        currentRow.push({
-          item: item,
-          width: scaledWidth,
-          height: this.targetRowHeight,
-          aspectRatio: aspectRatio
-        });
-        currentRowWidth += scaledWidth;
-        
-        // Check if we need to layout this row
-        const isLastItem = index === this.items.length - 1;
-        
-        if (currentRowWidth + (this.spacing * (currentRow.length - 1)) >= containerWidth || isLastItem) {
-          // Calculate how much space we have to fill
-          const totalSpacing = this.spacing * (currentRow.length - 1);
-          const availableWidth = containerWidth - totalSpacing;
+        setTimeout(() => {
+          notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+          notification.style.transform = 'translateY(0)';
+          notification.style.opacity = '1';
           
-          // If this is the last row and doesn't fill the width, handle differently
-          if (isLastItem && currentRowWidth < containerWidth * 0.8 && currentRow.length < 3) {
-            // For the last row that's not full, maintain aspect ratios
-            currentRow.forEach((rowItem, i) => {
-              const finalWidth = Math.floor(rowItem.aspectRatio * this.targetRowHeight);
-              
-              rowItem.item.style.width = `${finalWidth}px`;
-              rowItem.item.style.height = `${this.targetRowHeight}px`;
-              rowItem.item.style.marginRight = i < currentRow.length - 1 ? `${this.spacing}px` : '0';
-              rowItem.item.style.marginBottom = `${this.spacing}px`;
-            });
-          } else {
-            // Calculate ratio to fill the row completely
-            const ratio = availableWidth / currentRowWidth;
+          setTimeout(() => {
+            notification.style.transform = 'translateY(-50px)';
+            notification.style.opacity = '0';
             
-            // Apply dimensions to each item in the row
-            let rowHeight = Math.floor(this.targetRowHeight * ratio);
-            
-            currentRow.forEach((rowItem, i) => {
-              const finalWidth = Math.floor(rowItem.width * ratio);
-              
-              rowItem.item.style.width = `${finalWidth}px`;
-              rowItem.item.style.height = `${rowHeight}px`;
-              rowItem.item.style.marginRight = i < currentRow.length - 1 ? `${this.spacing}px` : '0';
-              rowItem.item.style.marginBottom = `${this.spacing}px`;
-            });
-          }
-          
-          // Reset for next row
-          currentRow = [];
-          currentRowWidth = 0;
-        }
-      });
-      
-      // Remove margin from the last item in each row
-      const rows = [];
-      let currentRowY = -1;
-      
-      // Group items by their vertical position (row)
-      Array.from(this.items).forEach(item => {
-        const rect = item.getBoundingClientRect();
-        if (currentRowY === -1 || Math.abs(rect.top - currentRowY) > 5) {
-          currentRowY = rect.top;
-          rows.push([]);
-        }
-        rows[rows.length - 1].push(item);
-      });
-      
-      // Remove right margin from last item in each row
-      rows.forEach(row => {
-        if (row.length > 0) {
-          row[row.length - 1].style.marginRight = '0';
-        }
-      });
+            setTimeout(() => notification.remove(), 3000);
+          }, 3000);
+        }, 10);
+      }
     }
 
     setupModalFunctionality() {
-      const modals = document.querySelectorAll('.modal');
+      if (!this.galleryModal) return;
       
-      this.items.forEach((item, index) => {
-        item.addEventListener('click', () => {
-          const modal = modals[index];
-          const img = item.querySelector('img');
-          const modalImg = modal.querySelector('.modal-content img');
-          
-          if (img && modalImg) {
-            modalImg.src = img.src;
-            modal.classList.add('active');
-          }
+      const closeBtn = this.galleryModal.querySelector('.modal-close');
+      
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          this.galleryModal.classList.remove('active');
+          document.body.style.overflow = ''; // Restore scrolling
         });
+      }
+      
+      // Close modal when clicking outside the content
+      this.galleryModal.addEventListener('click', (e) => {
+          this.galleryModal.classList.remove('active');
+          document.body.style.overflow = ''; // Restore scrolling
       });
       
-      // Close modal when clicking the close button or outside the image
-      document.querySelectorAll('.modal .close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', function() {
-          this.closest('.modal').classList.remove('active');
-        });
-      });
-      
-      document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-          if (e.target === this) {
-            this.classList.remove('active');
-          }
-        });
+      // Close modal with Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.galleryModal.classList.contains('active')) {
+          this.galleryModal.classList.remove('active');
+          document.body.style.overflow = ''; // Restore scrolling
+        }
       });
     }
 
-    // Method to destroy gallery instance
     destroy() {
-      // Remove event listeners
-      this.items.forEach(item => {
-        item.removeEventListener('click', () => {});
-        item.removeEventListener('mouseenter', () => {});
-        item.removeEventListener('mouseleave', () => {});
-      });
-
-      // Cleanup any remaining observers
-      if (this.imageObserver) {
-        this.imageObserver.disconnect();
-      }
-
-      // Clear any remaining timeouts or animations
-      gsap.killTweensOf(this.items);
+      // Clean up event listeners
+      window.removeEventListener('resize', this.handleResize?.bind(this));
+      document.removeEventListener('gallery:filtered', () => {});
       
-      // Remove resize event listener
-      window.removeEventListener('resize', () => {});
+      if (this.layout) {
+        this.layout.destroy();
+      }
     }
   }
 
