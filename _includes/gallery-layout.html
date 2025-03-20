@@ -1,71 +1,81 @@
 <div class="gallery">
-    <div class="gallery-row">
+    <div class="gallery-grid">
         {% for illustration in include.collection %}
-        <div class="gallery-item">
+        <div class="gallery-item" data-animate="scale" data-delay="{{ forloop.index | times: 100 }}">
             {% if illustration.image_path %}
-                <img src="{{ illustration.image_path | relative_url }}" 
-                     alt="{{ illustration.title }}" 
-                     loading="lazy"
-                     data-id="{{ forloop.index }}">
-                {% if illustration.mytitle %}
-                    <h4>{{ illustration.mytitle }}</h4>
-                {% endif %}
-            {% endif %}
-        </div>
-        <div class="modal">
-            <div class="hover-details">
-
-                {% if illustration.description %}
-                <div class="section-description">
-                    {{ illustration.description | markdownify }}
-                </div>
-                {% endif %}
-                {% if illustration.categories %}
-                <span class="categories">
-                    <div class="categories">
-                        {% for category in illustration.categories %}
-                        <span class="category-tag">{{ category }}</span>
-                        {% endfor %}
+                <div class="gallery-image-container">
+                    <img src="{{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=300' }}" 
+                         srcset="{{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=300' }} 300w,
+                                 {{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=600' }} 600w,
+                                 {{ illustration.image_path | relative_url | append: '?nf_resize=fit&w=900' }} 900w"
+                         sizes="(max-width: 768px) 300px, (max-width: 1200px) 600px, 900px"
+                         alt="{{ illustration.title }}" 
+                         style="background-color: #f0f0f0;"
+                         width="300"
+                         height="300"
+                         loading="lazy"
+                         data-id="{{ forloop.index }}"
+                         data-full-src="{{ illustration.image_path | relative_url }}"
+                         data-width="{{ illustration.width | default: 0 }}"
+                         data-height="{{ illustration.height | default: 0 }}"
+                         onload="if(this.naturalWidth && this.naturalHeight) { this.dataset.width = this.naturalWidth; this.dataset.height = this.naturalHeight; }">
+                    {% if illustration.mytitle %}
+                    <div class="gallery-item-overlay">
+                        <h4>{{ illustration.mytitle }}</h4>
                     </div>
-                </span>
-                {% endif %}
-                {% if illustration.process %}
-                <h4>Process</h4>
-                <ol>
-                    {% for step in illustration.process | split: '\n' %}
-                    <li>{{ step }}</li>
-                    {% endfor %}
-                </ol>
-                {% endif %}
-                {% if illustration.medium or illustration.tools or illustration.dimensions or illustration.colors %}
-                <h4>Artwork Details</h4>
-                <ul>
-                    {% if illustration.medium %}
-                    <li><strong>Medium:</strong> {{ illustration.medium }}</li>
                     {% endif %}
-                    {% if illustration.tools %}
-                    <li><strong>Tools:</strong> {{ illustration.tools | join: ", " }}</li>
-                    {% endif %}
-                    {% if illustration.dimensions %}
-                    <li><strong>Dimensions:</strong> {{ illustration.dimensions }}</li>
-                    {% endif %}
-                    {% if illustration.colors %}
-                    <li><strong>Colors:</strong>
-                        <ul>
-                            {% for color in illustration.colors %}
-                            <li style="background-color: {{ color }}; color: {{ color }}; display: inline-block; width: 20px; height: 20px; margin-right: 5px;">{{ color }}</li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endif %}
-                </ul>
-                {% endif %}
-            </div>
-            <span class="close">&times;</span>
-            <div class="modal-content">
-                <img src="" alt="Modal Image">
-            </div>
+                </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
 </div>
+
+<!-- Gallery Modal -->
+<div class="gallery-modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <img src="" alt="Modal Image">
+        <div class="modal-details">
+            <h3 class="modal-title"></h3>
+            <div class="modal-description"></div>
+            {% if illustration.categories %}
+            <div class="modal-categories">
+                {% for category in illustration.categories %}
+                <span class="category-tag">{{ category }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ensure layout recalculates after all images are loaded
+    window.addEventListener('load', function() {
+        // Initialize Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        });
+
+        // Observe all gallery items
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.classList.add('will-animate');
+            observer.observe(item);
+        });
+
+        // Dispatch gallery filtered event
+        setTimeout(function() {
+            const event = new CustomEvent('gallery:filtered');
+            document.dispatchEvent(event);
+        }, 100);
+    });
+</script>

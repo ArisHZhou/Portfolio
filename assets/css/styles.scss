@@ -1,14 +1,16 @@
 ---
+# Only front matter dashes needed for Jekyll
 ---
 
-// Base
 @use 'sass:map';
 @use 'variables' as *;
 @use 'mixins';
 @use 'reset';
 @use 'typography';
-@use "navigation";
-@use "pages";
+@use 'navigation';
+@use 'pages';
+@use 'gallery';
+@use 'animations';
 
 :root {
   @each $radius-name, $value in $border-radius {

@@ -4,6 +4,20 @@ export class AnimationCore {
   constructor() {
     this.initGSAP();
     this.animations = new Map();
+    this.observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    this.observer = null;
+    this.lastScrollY = window.scrollY;
+    this.scrollDirection = 'down';
+    this.ticking = false;
+  }
+
+  init() {
+    this.setupScrollObserver();
+    this.setupScrollDirectionDetection();
   }
 
   initGSAP() {
@@ -156,5 +170,51 @@ export class AnimationCore {
 
   animateSequence(elements) {
     return animationHelpers.fadeInSequence(elements);
-}
+  }
+
+  setupScrollObserver() {
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          if (entry.target.dataset.delay) {
+            entry.target.style.animationDelay = `${entry.target.dataset.delay}ms`;
+          }
+        }
+      });
+    }, this.observerOptions);
+
+    // Observe all elements with the data-animate attribute
+    document.querySelectorAll('[data-animate]').forEach(element => {
+      element.classList.add('will-animate');
+      this.observer.observe(element);
+    });
+  }
+
+  setupScrollDirectionDetection() {
+    window.addEventListener('scroll', () => {
+      if (!this.ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          this.scrollDirection = currentScrollY > this.lastScrollY ? 'down' : 'up';
+          this.lastScrollY = currentScrollY;
+          
+          // Update header visibility
+          const header = document.querySelector('.site-header');
+          if (header) {
+            if (currentScrollY <= 0) {
+              header.classList.remove('header-hidden');
+            } else if (this.scrollDirection === 'down' && currentScrollY > 100) {
+              header.classList.add('header-hidden');
+            } else if (this.scrollDirection === 'up') {
+              header.classList.remove('header-hidden');
+            }
+          }
+          
+          this.ticking = false;
+        });
+        this.ticking = true;
+      }
+    });
+  }
 }
