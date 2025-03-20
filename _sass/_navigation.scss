@@ -3,7 +3,7 @@
 @use "variables" as *;
 
 .site-header {
-  background-color: map.get(map.get($colors, primary), dark);
+  background-color: map.get(map.get($colors, neutral), white);
   padding: 1rem 2rem;
 }
 
@@ -42,7 +42,7 @@
 }
 
 .nav-link {
-  color: white;
+  color: map.get(map.get($colors, primary), base);
   text-decoration: none;
   font-size: 2rem;
   transition: color 0.2s;
@@ -71,7 +71,7 @@
 
 // Site Footer 
 .site-footer {
-    background-color: map.get(map.get($colors,primary), dark );
+    background-color: map.get(map.get($colors,neutral), white );
     color: map.get(map.get($colors,primary), light );
     text-align: center;
     padding: map.get($spacing, base); 
