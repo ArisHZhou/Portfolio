@@ -1,4 +1,6 @@
 /* Modern CSS Reset */
+@use 'sass:map';
+@use "variables" as *;
 *,
 *::before,
 *::after {
@@ -19,7 +21,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: beige;
+  background-color: map.get(map.get($colors,neutral), baseneutral);
 }
 
 

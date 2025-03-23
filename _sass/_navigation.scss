@@ -3,7 +3,7 @@
 @use "variables" as *;
 
 .site-header {
-  background-color: map.get(map.get($colors, neutral), white);
+  background-color: map.get(map.get($colors, neutral), baseneutral);
   padding: 1rem 2rem;
 }
 
@@ -92,7 +92,7 @@
 
 // Site Footer 
 .site-footer {
-    background-color: map.get(map.get($colors,neutral), white );
+    background-color: map.get(map.get($colors,neutral), baseneutral);
     color: map.get(map.get($colors,primary), baselight);
     text-align: center;
     padding: map.get($spacing, base); 
